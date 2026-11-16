@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Explore the 3D body atlas, track upper-body or full-body motion, move organs with your hand, and build a PC in the 3D workshop.">
+  <title>ICT × P Tech KK</title>
+  <link rel="preload" href="./assets/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./pc.css">
+  <script type="importmap">
+  {"imports":{"three":"./vendor/three/three.module.min.js","three/addons/":"./vendor/three/addons/"}}
+  </script>
+</head>
+<body>
+  <svg class="icon-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <symbol id="i-brand" viewBox="0 0 24 24"><path d="M2 12h4l3-6 4 12 3-6h6"/></symbol>
+      <symbol id="i-cube" viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z M4 7.5l8 4.5 8-4.5M12 12v9"/></symbol>
+      <symbol id="i-puzzle" viewBox="0 0 24 24"><path d="M10 3H5a2 2 0 0 0-2 2v5h3a2 2 0 1 1 0 4H3v5a2 2 0 0 0 2 2h5v-3a2 2 0 1 1 4 0v3h5a2 2 0 0 0 2-2v-5h-3a2 2 0 1 1 0-4h3V5a2 2 0 0 0-2-2h-5v3a2 2 0 1 1-4 0Z"/></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Zm9 9-9 5-9-5m18 4-9 5-9-5"/></symbol>
+      <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.3 5.3 0 0 0-7.5 0L12 5.9l-1.3-1.3a5.3 5.3 0 0 0-7.5 7.5l1.3 1.3L12 21l7.5-7.6 1.3-1.3a5.3 5.3 0 0 0 0-7.5Z"/></symbol>
+      <symbol id="i-lungs" viewBox="0 0 24 24"><path d="M12 3v7m0-2-4 4m4-4 4 4m-7-2V6c0-1.4-1.4-2-2.4-.9C4.2 7.7 2 12.3 2 17c0 2.5 1.2 3 3 3 2.5 0 4-1 4-3v-3m6-4V6c0-1.4 1.4-2 2.4-.9C19.8 7.7 22 12.3 22 17c0 2.5-1.2 3-3 3-2.5 0-4-1-4-3v-3"/></symbol>
+      <symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="14" rx="2"/><path d="m16 10 5-3v10l-5-3"/></symbol>
+      <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M4 9l8 1 8-1m-8 1v6m0 0-4 6m4-6 4 6"/></symbol>
+      <symbol id="i-hand" viewBox="0 0 24 24"><path d="M8 13V5a1.5 1.5 0 0 1 3 0v6-8a1.5 1.5 0 0 1 3 0v8-6a1.5 1.5 0 0 1 3 0v7-4a1.5 1.5 0 0 1 3 0v7a6 6 0 0 1-6 6h-2a5 5 0 0 1-4-2l-4-5a1.5 1.5 0 0 1 2.2-2Z"/></symbol>
+      <symbol id="i-guide" viewBox="0 0 24 24"><path d="M12 6c-2-2-5-3-9-2v14c4-1 7 0 9 2 2-2 5-3 9-2V4c-4-1-7 0-9 2Zm0 0v14"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></symbol>
+      <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 11a8 8 0 1 1 1.9 6.1M4 5v6h6"/></symbol>
+      <symbol id="i-move" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18m-12-6 3-3 3 3m-9 3-3 3 3 3m12-6 3 3-3 3m-9 3 3 3 3-3"/></symbol>
+      <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 12 7-12 7Z"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+      <symbol id="i-rotate" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="5"/><path d="m14 14-2 3 3 2m-2-9 2-3-3-2"/></symbol>
+      <symbol id="i-pc" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 7h6m-6 3h6"/><circle cx="12" cy="16" r="1.6"/></symbol>
+      <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5"/></symbol>
+      <symbol id="i-contract" viewBox="0 0 24 24"><path d="M4 9h5V4m11 5h-5V4M9 20v-5H4m11 5v-5h5"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+      <symbol id="i-panel" viewBox="0 0 24 24"><path d="M15 4H5v16h10m-5-14 9-3v18l-9-3Zm5 6h.1"/></symbol>
+      <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v9m4.9-6.8a8 8 0 1 1-9.8 0"/></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="m11 6-6 6 6 6M5 12h15"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="header-identity">
+        <a class="brand" href="./" aria-label="ICT × P Tech KK home">
+          <span class="brand-symbol"><svg aria-hidden="true"><use href="#i-brand"/></svg></span>
+          <span class="brand-wordmark">ICT × P Tech KK</span>
+        </a>
+      </div>
+      <nav class="stations" aria-label="Workshop stations">
+        <button class="station-button" type="button" data-mode="explore" aria-pressed="true"><svg aria-hidden="true"><use href="#i-cube"/></svg>Explore</button>
+        <button class="station-button" type="button" data-mode="rebuild" aria-pressed="false"><svg aria-hidden="true"><use href="#i-puzzle"/></svg>Rebuild</button>
+        <button class="station-button" type="button" data-mode="xray" aria-pressed="false"><svg aria-hidden="true"><use href="#i-layers"/></svg>Anatomy X-Ray</button>
+        <button class="station-button" type="button" data-mode="pose" aria-pressed="false"><svg aria-hidden="true"><use href="#i-person"/></svg>Body Scan</button>
+        <button class="station-button station-pc" type="button" id="openPc" aria-pressed="false" disabled><svg aria-hidden="true"><use href="#i-pc"/></svg>PC Assembly</button>
+      </nav>
+      <div class="top-actions">
+        <button class="button button-quiet button-icon" type="button" id="fullScreenBtn" aria-label="Enter full screen" title="Enter full screen" hidden><svg aria-hidden="true"><use id="fullScreenIcon" href="#i-expand"/></svg></button>
+        <button class="button button-quiet" type="button" id="openGuide" aria-label="Workshop guide"><svg aria-hidden="true"><use href="#i-guide"/></svg><span>Workshop guide</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="workspace" id="workspace" data-mode="explore">
+      <section class="viewer" id="viewer" aria-label="Interactive anatomy model">
+        <div class="viewer-grid" aria-hidden="true"></div>
+        <div class="viewer-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div id="stage" class="stage"><span class="viewer-a11y" id="stageDescription">Interactive anatomy model. Use the organ library to select an organ and the inspector to examine it.</span></div>
+        <div id="markers" class="markers"></div>
+        <div id="handCursor" class="hand-cursor" aria-hidden="true" hidden></div>
+
+        <div class="viewer-top">
+          <div class="viewer-title">
+            <div class="model-label" id="modelLabel"><i></i><span id="viewerTitle">BODY ATLAS</span></div>
+            <span class="view-caption" id="viewCaption">Anterior view</span>
+            <span class="gesture-indicator" id="gestureIndicator" hidden></span>
+            <span class="view-caption" id="roundHud" hidden></span>
+            <span class="view-caption" id="poseHud" hidden></span>
+          </div>
+          <div class="viewer-tools atlas-tools">
+            <button type="button" id="exitInspect" class="viewer-button" hidden><svg aria-hidden="true"><use href="#i-back"/></svg><span>Back to body</span></button>
+            <div class="framing-control" id="framingControl" role="group" aria-label="Model framing">
+              <button type="button" data-framing="upper" aria-pressed="true">Upper body</button>
+              <button type="button" data-framing="full" aria-pressed="false">Full body</button>
+            </div>
+            <button type="button" id="labelsBtn" class="viewer-button labels-button" aria-pressed="true" title="Toggle anatomy labels" aria-label="Anatomy labels"><span class="aa">Aa</span><span class="labels-text">Labels</span></button>
+            <button type="button" id="openAtlasTools" class="viewer-button library-button" aria-haspopup="dialog"><svg aria-hidden="true"><use href="#i-grid"/></svg><span id="atlasToolsLabel">Organs</span></button>
+            <button type="button" id="resetBtn" class="viewer-button square" title="Reset model" aria-label="Reset model"><svg aria-hidden="true"><use href="#i-reset"/></svg></button>
+          </div>
+        </div>
+
+        <section class="mission-panel" id="rebuildMissionPanel" aria-label="ภารกิจ Rebuild" lang="th" hidden>
+          <label for="rebuildMission">เลือกภารกิจ</label>
+          <div class="mission-controls">
+            <select id="rebuildMission"></select>
+            <button class="button button-primary" id="rebuildQuickStart" type="button" disabled>เริ่มเกม</button>
+          </div>
+        </section>
+
+        <section class="mission-panel" id="bodyMissionPanel" aria-labelledby="bodyMissionTitle" lang="th" hidden>
+          <div class="mission-heading">
+            <h2 id="bodyMissionTitle">เกมทำท่าตามโจทย์</h2>
+            <strong id="bodyMissionScore" class="mission-score">0/5</strong>
+          </div>
+          <p id="bodyMissionPrompt" role="status"></p>
+          <progress id="bodyMissionHold" max="100" value="0" aria-label="เวลาที่ค้างท่า" hidden></progress>
+          <button class="button button-primary" id="startBodyMission" type="button" disabled>เริ่มภารกิจ</button>
+        </section>
+
+        <div class="orientation" id="orientation" aria-hidden="true"><span>BODY R</span><span>BODY L</span></div>
+
+        <div class="viewer-bottom">
+          <div class="viewer-hint">
+            <span class="viewer-hint-icon"><svg aria-hidden="true"><use href="#i-hand"/></svg></span>
+            <span id="viewerHint">Drag an organ to pull it out.</span>
+          </div>
+          <div class="viewer-tools zoom-tools" id="zoomTools">
+            <button type="button" id="panBtn" class="viewer-button pan-button" aria-pressed="false" title="Pan left, right, up, and down" aria-label="Pan view"><svg aria-hidden="true"><use href="#i-move"/></svg><span>Pan</span></button>
+            <button type="button" id="zoomOut" class="viewer-button square" aria-label="Zoom out" title="Zoom out"><svg aria-hidden="true"><use href="#i-minus"/></svg></button>
+            <button type="button" id="zoomIn" class="viewer-button square" aria-label="Zoom in" title="Zoom in"><svg aria-hidden="true"><use href="#i-plus"/></svg></button>
+            <button type="button" id="recenterBtn" class="viewer-button square" aria-label="Recenter view" title="Recenter view"><svg aria-hidden="true"><use href="#i-target"/></svg></button>
+          </div>
+        </div>
+
+        <section class="camera-card" id="cameraCard" aria-label="Webcam controls" data-camera-state="off">
+          <div class="camera-heading"><h2><svg aria-hidden="true"><use href="#i-camera"/></svg> <span id="cameraTitle">Hand tracking</span></h2><span class="camera-state" id="cameraState">OFF</span></div>
+          <div class="camera-frame" id="cameraFrame">
+            <video id="webcam" autoplay playsinline muted aria-label="Live camera preview" hidden></video>
+            <canvas id="handOverlay" aria-hidden="true" hidden></canvas>
+            <div class="camera-placeholder" id="cameraPlaceholder"><span class="camera-reticle"><svg aria-hidden="true"><use href="#i-hand"/></svg></span><span id="cameraPlaceholderText">Camera preview</span></div>
+          </div>
+          <button type="button" class="button button-secondary button-wide camera-button" id="cameraBtn"><svg aria-hidden="true"><use id="cameraIcon" href="#i-camera"/></svg><span id="cameraBtnText">Enable camera</span></button>
+          <p class="camera-note" id="cameraNote" role="status"></p>
+        </section>
+
+        <div class="viewer-feedback" id="viewerFeedback" role="status" aria-live="polite"></div>
+
+        <div class="viewer-loading" id="viewerLoading" role="status">
+          <span class="spinner" id="loadingSpinner"></span>
+          <strong id="loadingText">Loading 3D anatomy…</strong>
+          <button class="viewer-button" id="retryModel" type="button" hidden>Try again</button>
+        </div>
+      </section>
+
+
+    </div>
+
+    <section class="pc-workbench" id="pcBench" aria-label="PC Assembly simulator" hidden>
+      <div class="pc-stage" id="pcStage" aria-label="Interactive PC workbench">
+        <canvas class="pc-snap-guides" id="pcSnapGuides" aria-hidden="true" hidden></canvas>
+        <div class="pc-item-tag" id="pcItemTag" aria-hidden="true" hidden></div>
+        <div class="pc-hardware">
+          <span>Intel Core i9-14900KF</span>
+          <span>GeForce RTX 5050 · 8 GB</span>
+          <strong class="pc-system" id="pcSystem" role="status">OFF</strong>
+        </div>
+
+        <div class="pc-toolbar">
+          <div class="pc-controls" role="group" aria-label="Workbench view">
+            <button class="pc-control" data-pc-view="bench" type="button" aria-pressed="true" lang="th">โต๊ะ</button>
+            <button class="pc-control" data-pc-view="parts" type="button" aria-pressed="false" lang="th">ชิ้นส่วน</button>
+            <button class="pc-control" data-pc-view="board" type="button" aria-pressed="false" lang="th">ซูมบอร์ด</button>
+            <button class="pc-control" data-pc-view="case" type="button" aria-pressed="false" lang="th"><svg aria-hidden="true"><use href="#i-pc"/></svg>ซูมเคส</button>
+            <button class="pc-control" data-pc-view="ports" type="button" aria-pressed="false" lang="th">ด้านหลัง</button>
+            <button class="pc-control" data-pc-view="screen" type="button" aria-pressed="false" lang="th">จอ</button>
+          </div>
+          <div class="pc-controls" role="group" aria-label="Cooling and case">
+            <button class="pc-control" id="pcPanel" type="button" aria-pressed="true" lang="th"><svg aria-hidden="true"><use href="#i-panel"/></svg><span id="pcPanelText">ปิดฝาเคส</span></button>
+            <button class="pc-control" id="pcLayCase" type="button" aria-pressed="true" lang="th"><svg aria-hidden="true"><use href="#i-rotate"/></svg><span id="pcLayCaseText">ตั้งเคส</span></button>
+            <div class="pc-cooling" role="group" aria-label="CPU cooling">
+              <button class="pc-control" data-cooling="air" type="button" aria-pressed="true" lang="th">ชุดลม</button>
+              <button class="pc-control" data-cooling="liquid" type="button" aria-pressed="false" lang="th">ชุดน้ำ 240</button>
+            </div>
+          </div>
+        </div>
+
+        <p class="pc-status" id="pcStatus" role="status" aria-live="polite" lang="th"></p>
+        <p class="viewer-a11y" id="pcMonitorStatus" role="status" lang="th"></p>
+
+        <div class="pc-bottom">
+          <div class="pc-inventory" aria-label="Select components or cables">
+            <label for="pcInventory" class="viewer-a11y" lang="th">หยิบชิ้นส่วนหรือสาย</label>
+            <select id="pcInventory" lang="th"><option value="">หยิบชิ้นส่วนหรือสาย</option></select>
+            <p id="pcHeldLabel" lang="th" aria-live="polite"></p>
+            <button class="pc-control icon" id="pcCancel" type="button" aria-label="วางกลับโต๊ะ" title="วางกลับโต๊ะ" hidden><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="pc-controls" role="group" aria-label="Power and camera controls">
+            <button class="pc-control icon" id="pcZoomOut" type="button" title="Zoom out" aria-label="Zoom out"><svg aria-hidden="true"><use href="#i-minus"/></svg></button>
+            <button class="pc-control icon" id="pcZoomIn" type="button" title="Zoom in" aria-label="Zoom in"><svg aria-hidden="true"><use href="#i-plus"/></svg></button>
+            <button class="pc-control icon" id="pcReset" type="button" title="เริ่มประกอบใหม่" aria-label="เริ่มประกอบใหม่"><svg aria-hidden="true"><use href="#i-reset"/></svg></button>
+            <button class="pc-control pc-wire-assist" id="pcAssistWires" type="button" lang="th" hidden>ต่อสายอัตโนมัติ</button>
+            <button class="pc-control pc-power" id="pcPower" type="button" aria-pressed="false" lang="th"><svg aria-hidden="true"><use href="#i-power"/></svg><span id="pcPowerText">ทดสอบเปิดเครื่อง</span></button>
+          </div>
+        </div>
+        <div class="pc-loading" id="pcLoading" role="status" lang="th">
+          <span class="spinner" id="pcLoadingSpinner"></span><strong id="pcLoadingText">กำลังจัดโต๊ะ…</strong>
+          <button type="button" class="pc-control" id="retryPc" hidden>ลองอีกครั้ง</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span class="copyright">© 2026 BioAre</span>
+      <span><span class="footer-dot"></span><span id="inputText">Mouse and touch controls</span></span>
+      <button class="text-button" type="button" id="openCredits">Model credits</button>
+    </footer>
+  </main>
+
+  <dialog id="atlasToolsDialog" class="dialog atlas-dialog" aria-labelledby="atlasDialogTitle">
+    <div class="dialog-top">
+      <h2 id="atlasDialogTitle">Organ library</h2>
+      <button class="button button-icon" data-close type="button" aria-label="Close anatomy tools"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="atlas-panel-grid">
+      <section class="card library-card" id="libraryCard">
+        <div class="card-heading library-heading"><h2 class="small-heading">Organ library</h2><span class="item-type" id="atlasCount" aria-live="polite"></span></div>
+        <input id="organSearch" class="organ-search" type="search" placeholder="Search name or system" aria-label="Search organs" autocomplete="off">
+        <p id="organSearchEmpty" class="description" hidden>No matching organs.</p>
+        <div id="organList" class="organ-list" aria-label="Atlas organs"></div>
+      </section>
+
+      <section class="card layer-card" id="layerCard" hidden>
+        <h2 class="small-heading">Body layers</h2>
+        <div id="layerList" class="layer-list" role="group" aria-label="Body layer"></div>
+      </section>
+      <section class="card scan-card" id="scanCard" aria-labelledby="scanTitle" hidden>
+        <div class="card-heading">
+          <h2 class="small-heading" id="scanTitle">Body tracking</h2>
+          <span class="camera-state" id="poseBadge" role="status">CAMERA OFF</span>
+        </div>
+        <p class="description" id="poseInstructions">Enable the camera, then step back until your head, hands, and feet are visible.</p>
+        <div class="scan-layers" id="scanLayers" role="group" aria-label="Body Scan layer"></div>
+        <button type="button" class="button button-secondary button-wide" id="retryPose" hidden>Retry body tracking</button>
+      </section>
+      <section class="card inspector-card" id="inspectorCard" aria-label="Organ inspector">
+        <div class="card-heading"><h2 class="small-heading" id="inspectorLabel">Selected organ</h2><span class="item-type" id="organSystem">Cardiovascular</span></div>
+        <div class="organ-header" id="organHeader">
+          <span class="organ-badge" id="organBadge"><svg aria-hidden="true"><use id="organIcon" href="#i-heart"/></svg></span>
+          <h3 id="organName">Heart</h3>
+        </div>
+        <p class="description" id="organDescription">Four chambers keep blood moving through the lungs and the rest of the body.</p>
+        <div id="organActions" class="action-stack">
+          <button type="button" class="button button-primary" id="inspectBtn" disabled><svg aria-hidden="true"><use href="#i-arrow"/></svg>Inspect in 3D</button>
+          <div class="action-row">
+            <button type="button" class="button button-secondary" id="extractBtn" disabled>Pull out</button>
+            <button type="button" class="button button-secondary" id="returnBtn" disabled>Return to body</button>
+          </div>
+        </div>
+        <div class="inspect-details" id="inspectDetails" hidden>
+          <div class="subview" id="heartTabs" role="group" aria-label="Heart view">
+            <button type="button" data-heart-view="outside" aria-pressed="true">Exterior</button>
+            <button type="button" data-heart-view="inside" aria-pressed="false">Chambers</button>
+          </div>
+          <p class="description detail-note" id="detailNote"></p>
+          <div class="structure-list" id="structureList" role="group" aria-label="Anatomical structures"></div>
+          <button class="button button-secondary button-wide" id="backToBody" type="button">Back to body</button>
+        </div>
+      </section>
+
+      <section class="card challenge-card" id="challengeCard" aria-label="Timed reconstruction challenge" hidden>
+        <h2 class="small-heading"><svg aria-hidden="true"><use href="#i-clock"/></svg> Timed reconstruction</h2>
+        <div class="challenge-stats">
+          <div><span>Time left</span><strong id="timeLeft">1:30</strong></div>
+          <div><span>Score</span><strong id="challengePoints">0<span>/3</span></strong></div>
+        </div>
+        <div class="challenge-track" aria-hidden="true"><div id="challengeBar"></div></div>
+        <h3 id="challengeTitle" lang="th">หัวใจและปอด</h3>
+        <p class="description" id="challengeDescription" lang="th"></p>
+        <ul id="placementList" class="placement-list"></ul>
+        <button type="button" class="button button-primary button-wide" id="challengeStart" disabled><svg aria-hidden="true"><use href="#i-play"/></svg><span id="challengeAction">Start round</span></button>
+        <div id="keyboardPlacement" class="keyboard-placement" hidden>
+          <span class="small-heading" id="placeAt">Place selected organ</span>
+          <div class="target-actions" role="group" aria-labelledby="placeAt"></div>
+        </div>
+      </section>
+
+      <section class="card xray-card" id="xrayCard" aria-label="Anatomy X-Ray information" hidden>
+        <div class="card-heading"><h2 class="small-heading">Anatomy X-Ray</h2><span id="layerPill" class="item-type">Layer 1 / 3</span></div>
+        <h3 id="layerName">Skeleton</h3>
+        <p class="description" id="layerDescription">The rib cage protects the heart and lungs. Rotate the body to trace the ribs back to the spine.</p>
+      </section>
+    </div>
+  </dialog>
+
+  <dialog id="guideDialog" class="dialog" aria-labelledby="guideTitle">
+    <div class="dialog-top"><div class="eyebrow">ICT × P Tech KK</div><button class="button button-icon" data-close type="button" aria-label="Close workshop guide"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <h2 id="guideTitle">Workshop guide</h2>
+    <div class="guide-grid">
+      <section><h3>Use the webcam</h3><ul><li><b>Point, then make a fist</b> to grab. Move your hand and open it to place the organ.</li><li><b>Make an L</b> with your thumb and index finger. Widen or narrow the gap to zoom.</li><li><b>Pinch empty space</b> and move to rotate. With <b>Pan</b> on, pinch and move to shift the view.</li><li><b>Hold up two fingers</b> to toggle labels or switch X-ray layers.</li><li><b>Pinch with both hands</b> and move them apart to zoom.</li></ul></section>
+      <section><h3>Use mouse, touch or keyboard</h3><ul><li>Drag an organ to move it and drag empty space to rotate. Use <b>Pan</b> to shift the entire view.</li><li>Use the on-screen zoom controls or scroll.</li><li>Use <b>Tab</b> and <b>Enter</b> to choose an organ, label, or placement target.</li><li>Use <b>L</b> to toggle labels and <b>R</b> to reset the model.</li></ul></section>
+    </div>
+    <details class="schedule"><summary>Set up Body Scan</summary>
+      <p>Choose <b>Body Scan</b> and enable the camera. Select <b>Upper body</b> to track shoulders and arms while seated, or <b>Full body</b> to track legs and feet as well. The preview, cursor, and model follow the same mirror view.</p>
+      <p>The preview shows green lines and dots on tracked hands and blue lines on tracked body joints. Video stays on this device.</p>
+      <p>Aim the cursor at an organ and make a fist. Bring your hand closer or farther to adjust depth, then open it to place. Select <b>Return to body</b> to put the organ back.</p>
+      <p lang="th">กด <b>เริ่มภารกิจ</b> แล้วค้างท่าตามโจทย์จนแถบเต็ม โหมดครึ่งตัวใช้ท่าแขน โหมดเต็มตัวใช้ทั้งท่าแขนและยกเข่า</p>
+    </details>
+    <details class="schedule" lang="th"><summary>เกม Rebuild</summary>
+      <p>เลือกชุดอวัยวะแล้วกด <b>เริ่มเกม</b> ลากอวัยวะไปยังจุด A, B หรือ C ก่อนหมดเวลา หรือเปิด <b>Challenge</b> เพื่อเลือกจุดวางด้วยปุ่ม</p>
+    </details>
+    <details class="schedule"><summary>PC Assembly controls</summary>
+      <p>Drag equipment directly from the table. You can also click to pick it up, change views, and click to release. To use a keyboard, choose an item from the list, move it with the arrow keys, and press Enter to drop or Escape to set it back.</p>
+      <p>Release a piece over a clear spot on the worktop to leave it there. Near the edges, the worktop supports the entire piece.</p>
+      <p lang="th">เคสเริ่มในแนวนอนและเปิดฝาไว้ ประกอบบนโต๊ะหรือในเคสได้เลย ขณะถือชิ้นส่วนให้เล็งกรอบสีเหลืองแล้วปล่อยใกล้จุดวาง ชิ้นส่วนจะเข้าล็อก</p>
+      <p lang="th">เลือกชุดลมหรือชุดน้ำ เมื่อประกอบครบจะมีปุ่ม <b>ต่อสายอัตโนมัติ</b> กด <b>ทดสอบเปิดเครื่อง</b> เพื่อดูเคสตั้งขึ้นและจอเริ่มทำงาน</p>
+      <p lang="th">เปิดกล้องแล้วชี้นิ้วค้างบนปุ่ม หรือจีบนิ้วเพื่อกด ชี้ไปที่อุปกรณ์เพื่อดูชื่อ</p>
+    </details>
+    <details class="schedule"><summary>Three-hour workshop plan</summary>
+      <dl><dt>20 min</dt><dd>Introduce computer vision, 3D and spatial AR.</dd><dt>25 min</dt><dd>Demonstrate a heart extraction and return.</dd><dt>40 min</dt><dd>Watch the hand landmarks and test how pinching changes their distances.</dd><dt>50 min</dt><dd>In teams, edit an organ fact, layer instruction, or challenge timing in the source.</dd><dt>30 min</dt><dd>Rotate through heart exploration, reconstruction, Anatomy X-Ray, and Body Scan.</dd><dt>15 min</dt><dd>Present what changed and what each team observed.</dd></dl>
+    </details>
+  </dialog>
+
+  <dialog id="creditsDialog" class="dialog credits-dialog" aria-labelledby="creditsTitle">
+    <div class="dialog-top"><div class="eyebrow">ICT × P Tech KK</div><button class="button button-icon" data-close type="button" aria-label="Close model credits"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <h2 id="creditsTitle">Model credits</h2>
+    <p><b>Body atlas.</b> BodyParts3D © The Database Center for Life Science. Body model adapted by <a href="https://github.com/MervinR07/open-anatomy-3d" target="_blank" rel="noopener">open-anatomy-3d</a>, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. The atlas project also credits HuBMAP’s Human Reference Atlas female organs (CC BY 4.0) and MakeHuman’s female body (CC0).</p>
+    <p><b>Heart close-up.</b> BodyParts3D © The Database Center for Life Science, CC BY 4.0. The <a href="https://github.com/organui/heart-3d/blob/main/docs/MODEL_PROVENANCE.md" target="_blank" rel="noopener">OrganUI Heart model</a> combines a subset of the atlas meshes. The lab recolors, rescales, and highlights the meshes for teaching.</p>
+    <p><b>Lung surfaces.</b> <a href="https://3d.nih.gov/entries/21008" target="_blank" rel="noopener">Human Reference Atlas Lung, Male v1.3</a> (HuBMAP, CC BY 4.0), based on the Visible Human Male. The lab combines the bronchopulmonary segments and repositions the lungs in the body atlas.</p>
+    <p><b>Learning references.</b> <a href="https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy" target="_blank" rel="noopener">Heart anatomy</a> and <a href="https://openstax.org/books/anatomy-and-physiology-2e/pages/22-2-the-lungs" target="_blank" rel="noopener">lung anatomy</a> from OpenStax.</p>
+    <p>Organ scale and colors are adjusted for classroom viewing. The chamber view exposes the spaces inside the ventricles.</p>
+  </dialog>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
